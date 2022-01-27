@@ -1,3 +1,6 @@
-from django.shortcuts import render
+from django.http import HttpRequest, HttpResponse
+from django.template.response import TemplateResponse
 
-# Create your views here.
+
+def index(request: HttpRequest) -> HttpResponse:
+    return TemplateResponse(request, "articles/index.html")
