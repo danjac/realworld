@@ -21,7 +21,9 @@
         </div>
 </form>
 {% if new_comment %}
+<div id="comment-{{ new_comment.id }}">
 {% include "comments/_comment.html" with comment=new_comment %}
+</div>
 {% endif %}
 
 

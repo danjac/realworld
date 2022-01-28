@@ -40,7 +40,7 @@
                             </li>
                             {% if user.is_authenticated %}
                                 <li class="nav-item{% if url_name == 'settings' %} active{% endif %}">
-                                    <a class="nav-link" href="">
+                                    <a class="nav-link" href="{% url 'settings' %}">
                                         <i class="ion-gear-a"></i>&nbsp;Settings
                                     </a>
                                 </li>

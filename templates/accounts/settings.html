@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="settings-page">
+    <div class="container page">
+        <div class="row">
+
+            <div class="col-md-6 offset-md-3 col-xs-12">
+                <h1 class="text-xs-center">Your Settings</h1>
+
+                {% if form.errors %}
+                    <ul class="error-messages">
+                        {% for error in form.errors.values %}
+                        {{ error.as_text }}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <form method="post" action="{% url 'settings' %}">
+                    {% csrf_token %}
+                    <fieldset>
+                        <fieldset class="form-group">
+                            {% render_field form.image class+="form-control form-control-lg" placeholder="URL of profile picture" %}
+                        </fieldset>
+                        <fieldset class="form-group">
+                            {% render_field form.name class+="form-control form-control-lg" placeholder="Your Name" %}
+                        </fieldset>
+                        <fieldset class="form-group">
+                            {% render_field form.bio class+="form-control form-control-lg" placeholder="Short bio about you" rows=8 %}
+                        </fieldset>
+                        <fieldset class="form-group">
+                            {% render_field form.email class+="form-control form-control-lg" placeholder="Email" %}
+                        </fieldset>
+                        <fieldset class="form-group">
+                            {% render_field form.password class+="form-control form-control-lg" placeholder="Password" %}
+                        </fieldset>
+                        <button class="btn btn-lg btn-primary pull-xs-right">
+                            Update Settings
+                        </button>
+                    </fieldset>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock content %}

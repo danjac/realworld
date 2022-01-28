@@ -8,7 +8,7 @@ from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
-from .forms import UserCreationForm
+from .forms import SettingsForm, UserCreationForm
 
 User = get_user_model()
 
@@ -38,6 +38,28 @@ def profile(request: HttpRequest, user_id: int) -> HttpResponse:
             "favorites": favorites,
             "is_following": profile.followers.filter(pk=request.user.id).exists(),
         },
+    )
+
+
+@require_http_methods(["GET", "POST"])
+@login_required
+def settings(request: HttpRequest) -> HttpResponse:
+
+    if request.method == "GET":
+        return TemplateResponse(
+            request,
+            "accounts/settings.html",
+            {"form": SettingsForm(instance=request.user)},
+        )
+
+    if (form := SettingsForm(request.POST, instance=request.user)).is_valid():
+        form.save()
+        return HttpResponseRedirect(request.user.get_absolute_url())
+
+    return TemplateResponse(
+        request,
+        "accounts/settings.html",
+        {"form": SettingsForm(instance=request.user)},
     )
 
 

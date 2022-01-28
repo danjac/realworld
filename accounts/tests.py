@@ -36,8 +36,7 @@ class TestUserCreationForm(TestCase):
     form_data = {
         "name": "Tester",
         "email": "tester@gmail.com",
-        "password1": "testpass1",
-        "password2": "testpass1",
+        "password": "testpass1",
     }
 
     def test_save(self):
@@ -46,15 +45,6 @@ class TestUserCreationForm(TestCase):
 
         user = form.save()
         self.assertTrue(user.check_password("testpass1"))
-
-    def test_password_mismatch(self):
-        form = UserCreationForm(
-            {
-                **self.form_data,
-                "password2": "testpass2",
-            }
-        )
-        self.assertFalse(form.is_valid())
 
 
 class TestFollowView(TestCase):
@@ -120,8 +110,7 @@ class TestRegisterView(TestCase):
             {
                 "name": "Tester",
                 "email": "tester@gmail.com",
-                "password1": "testpass1",
-                "password2": "testpass1",
+                "password": "testpass1",
             },
         )
         self.assertRedirects(response, reverse("home"))
