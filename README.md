@@ -3,9 +3,9 @@ Implementation of real-world application: https://github.com/gothinkster/realwor
 
 Technology:
 
-* Django
-* Alpine
-* HTMX
+* [Django](https://djangoproject.com)
+* [Alpine](https://alpinejs.dev)
+* [HTMX](https://htmx.org)
 
 To install:
 
