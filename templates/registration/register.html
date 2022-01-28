@@ -1,47 +1,47 @@
 {% extends "base.html" %}
 {% load widget_tweaks %}
 {% block content %}
-<div class="auth-page">
-    <div class="container page">
-        <div class="row">
+    <div class="auth-page">
+        <div class="container page">
+            <div class="row">
 
-            <div class="col-md-6 offset-md-3 col-xs-12">
-                <h1 class="text-xs-center">Sign up</h1>
-                <p class="text-xs-center">
-                    <a href="">Have an account?</a>
-                </p>
+                <div class="col-md-6 offset-md-3 col-xs-12">
+                    <h1 class="text-xs-center">Sign up</h1>
+                    <p class="text-xs-center">
+                        <a href="">Have an account?</a>
+                    </p>
 
-                {% if form.errors %}
-                <ul class="error-messages">
-                    {% for error in form.errors %}
-                    <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
+                    {% if form.errors %}
+                        <ul class="error-messages">
+                            {% for error in form.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
 
-                <form method="post" action="{% url 'register' %}">
-                    {% csrf_token %}
-                    {% with WIDGET_CLASS="form-control form-control-lg" %}
-                    <fieldset class="form-group">
-                        {% render_field form.name placeholder="Your Name" class+=WIDGET_CLASS %}
-                    </fieldset>
-                    <fieldset class="form-group">
-                        {% render_field form.email placeholder="Email" class+=WIDGET_CLASS %}
-                    </fieldset>
-                    <fieldset class="form-group">
-                        {% render_field form.password1 placeholder="Password" class+=WIDGET_CLASS %}
-                    </fieldset>
-                    <fieldset class="form-group">
-                        {% render_field form.password2 placeholder="Repeat Password" class+=WIDGET_CLASS %}
-                    </fieldset>
-                    {% endwith %}
-                    <button class="btn btn-lg btn-primary pull-xs-right">
-                        Sign up
-                    </button>
-                </form>
+                    <form method="post" action="{% url 'register' %}">
+                        {% csrf_token %}
+                        {% with WIDGET_CLASS="form-control form-control-lg" %}
+                            <fieldset class="form-group">
+                                {% render_field form.name placeholder="Your Name" class+=WIDGET_CLASS %}
+                            </fieldset>
+                            <fieldset class="form-group">
+                                {% render_field form.email placeholder="Email" class+=WIDGET_CLASS %}
+                            </fieldset>
+                            <fieldset class="form-group">
+                                {% render_field form.password1 placeholder="Password" class+=WIDGET_CLASS %}
+                            </fieldset>
+                            <fieldset class="form-group">
+                                {% render_field form.password2 placeholder="Repeat Password" class+=WIDGET_CLASS %}
+                            </fieldset>
+                        {% endwith %}
+                        <button class="btn btn-lg btn-primary pull-xs-right">
+                            Sign up
+                        </button>
+                    </form>
+                </div>
+
             </div>
-
         </div>
     </div>
-</div>
 {% endblock content %}

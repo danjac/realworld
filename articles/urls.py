@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     path("", views.home, name="home"),
     path("new/", views.create_article, name="create_article"),
+    path("tags-autocomplete/", views.tags_autocomplete, name="tags_autocomplete"),
     path(
         "article/<int:article_id>/<slug:slug>/",
         views.article_detail,

@@ -25,25 +25,25 @@
                     </div>
 
                     {% for article in articles %}
-                    <div class="article-preview">
-                        <div class="article-meta">
-                            {% if article.author.image %}
-                            <a href="profile.html"><img src="{{ article.author.image }}"/></a>
-                            {% endif %}
-                            <div class="info">
-                                <a href="" class="author">{{ article.author.get_full_name }}</a>
-                                <span class="date">{{ article.created|date }}</span>
+                        <div class="article-preview">
+                            <div class="article-meta">
+                                {% if article.author.image %}
+                                    <a href="profile.html"><img src="{{ article.author.image }}"/></a>
+                                {% endif %}
+                                <div class="info">
+                                    <a href="" class="author">{{ article.author.get_full_name }}</a>
+                                    <span class="date">{{ article.created|date }}</span>
+                                </div>
+                                <button class="btn btn-outline-primary btn-sm pull-xs-right">
+                                    <i class="ion-heart"></i> 29
+                                </button>
                             </div>
-                            <button class="btn btn-outline-primary btn-sm pull-xs-right">
-                                <i class="ion-heart"></i> 29
-                            </button>
+                            <a href="{{ article.get_absolute_url }}" class="preview-link">
+                                <h1>{{ article.title }}</h1>
+                                <p>{{ article.summary }}</p>
+                                <span>Read more...</span>
+                            </a>
                         </div>
-                        <a href="{{ article.get_absolute_url }}" class="preview-link">
-                            <h1>{{ article.title }}</h1>
-                            <p>{{ article.summary }}</p>
-                            <span>Read more...</span>
-                        </a>
-                    </div>
                     {% endfor %}
 
                 </div>
@@ -53,14 +53,9 @@
                         <p>Popular Tags</p>
 
                         <div class="tag-list">
-                            <a href="" class="tag-pill tag-default">programming</a>
-                            <a href="" class="tag-pill tag-default">javascript</a>
-                            <a href="" class="tag-pill tag-default">emberjs</a>
-                            <a href="" class="tag-pill tag-default">angularjs</a>
-                            <a href="" class="tag-pill tag-default">react</a>
-                            <a href="" class="tag-pill tag-default">mean</a>
-                            <a href="" class="tag-pill tag-default">node</a>
-                            <a href="" class="tag-pill tag-default">rails</a>
+                            {% for tag in tags %}
+                                <a href="" class="tag-pill tag-default">{{ tag }}</a>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>

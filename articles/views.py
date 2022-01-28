@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
+from taggit.models import Tag
 
 from .forms import ArticleForm
 from .models import Article
@@ -11,12 +12,14 @@ from .models import Article
 
 @require_http_methods(["GET"])
 def home(request: HttpRequest) -> HttpResponse:
+
     articles = Article.objects.select_related("author").order_by("-created")
+    tags = Tag.objects.all()
 
     return TemplateResponse(
         request,
         "articles/home.html",
-        {"articles": articles},
+        {"articles": articles, "tags": tags},
     )
 
 
@@ -50,6 +53,9 @@ def create_article(request: HttpRequest) -> HttpResponse:
         article = form.save(commit=False)
         article.author = request.user
         article.save()
+
+        # save tags
+        form.save_m2m()
 
         return HttpResponseRedirect(article.get_absolute_url())
 
@@ -95,3 +101,22 @@ def delete_article(request: HttpRequest, article_id: int) -> HttpResponse:
     article = get_object_or_404(Article, pk=article_id, author=request.user)
     article.delete()
     return HttpResponseRedirect(reverse("home"))
+
+
+@require_http_methods(["GET"])
+def tags_autocomplete(request: HttpRequest) -> HttpResponse:
+    search: str = ""
+
+    # find the latest item in tag string
+    try:
+        search = request.GET["tags"].split(" ")[-1].strip()
+    except (KeyError, IndexError):
+        pass
+
+    tags = (
+        Tag.objects.filter(name__istartswith=search).distinct()
+        if search
+        else Tag.objects.none()
+    )
+
+    return TemplateResponse(request, "articles/_tags.html", {"tags": tags})

@@ -1,0 +1,10 @@
+{% if tags %}
+    <div class="tag-list">
+        {% for tag in tags %}
+            <button type="button"
+                title="Click to add this tag"
+                @click="insertTag('{{ tag.name|escapejs }}')"
+                class="tag-pill tag-default">{{ tag.name }}</button>
+        {% endfor %}
+    </div>
+{% endif %}
