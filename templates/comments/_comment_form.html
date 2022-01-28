@@ -1,29 +1,29 @@
 {% load widget_tweaks %}
 <form class="card comment-form"
-      {% if comment %}
-      hx-target="#comment-{{ comment.id }}"
-      hx-post="{% url 'edit_comment' comment.id %}"
-      {% else %}
-      hx-target="#comment-form"
-      hx-post="{% url 'add_comment' article.id %}"
-      {% endif %}
-      hx-swap="innerHTML">
-        <div class="card-block">
-            {% render_field form.content placeholder="Write a comment..." class+="form-control" rows=3 %}
-        </div>
-        <div class="card-footer">
-            {% if user.image %}
+    {% if comment %}
+        hx-target="#comment-{{ comment.id }}"
+        hx-post="{% url 'edit_comment' comment.id %}"
+    {% else %}
+        hx-target="#comment-form"
+        hx-post="{% url 'add_comment' article.id %}"
+    {% endif %}
+    hx-swap="innerHTML">
+    <div class="card-block">
+        {% render_field form.content placeholder="Write a comment..." class+="form-control" rows=3 %}
+    </div>
+    <div class="card-footer">
+        {% if user.image %}
             <img src="{{ user.image }}" class="comment-author-img"/>
-            {% endif %}
-            <button class="btn btn-sm btn-primary" type="submit">
-                {{ comment|yesno:'Save,Post' }} Comment
-            </button>
-        </div>
+        {% endif %}
+        <button class="btn btn-sm btn-primary" type="submit">
+            {{ comment|yesno:'Save,Post' }} Comment
+        </button>
+    </div>
 </form>
 {% if new_comment %}
-<div id="comment-{{ new_comment.id }}">
-{% include "comments/_comment.html" with comment=new_comment %}
-</div>
+    <div id="comment-{{ new_comment.id }}">
+        {% include "comments/_comment.html" with comment=new_comment %}
+    </div>
 {% endif %}
 
 

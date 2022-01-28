@@ -1,49 +1,49 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="profile-page" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    <div class="profile-page" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 
-    <div class="user-info">
+        <div class="user-info">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-xs-12 col-md-10 offset-md-1">
+                        {% if profile.image %}
+                            <img src="{{ profile.image }}" class="user-img"/>
+                        {% endif %}
+                        <h4>{{ profile.name }}</h4>
+                        <p>
+                            {{ profile.bio }}
+                        </p>
+                        {% include "accounts/_follow_btn.html" with button_id="follow-profile" followed=profile %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
         <div class="container">
             <div class="row">
 
                 <div class="col-xs-12 col-md-10 offset-md-1">
-                    {% if profile.image %}
-                    <img src="{{ profile.image }}" class="user-img"/>
-                    {% endif %}
-                    <h4>{{ profile.name }}</h4>
-                    <p>
-                        {{ profile.bio }}
-                    </p>
-                    {% include "accounts/_follow_btn.html" with button_id="follow-profile" followed=profile %}
+                    <div class="articles-toggle">
+                        <ul class="nav nav-pills outline-active">
+                            <li class="nav-item">
+                                <a class="nav-link{% if not favorites %} active{% endif %}" href="{{ request.path }}">My Articles</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link{% if favorites %} active{% endif %}" href="{{ request.path }}?favorites">Favorited Articles</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {% for article in articles %}
+                        {% include "articles/_article.html" %}
+                    {% endfor %}
+
                 </div>
 
             </div>
         </div>
+
     </div>
-
-    <div class="container">
-        <div class="row">
-
-            <div class="col-xs-12 col-md-10 offset-md-1">
-                <div class="articles-toggle">
-                    <ul class="nav nav-pills outline-active">
-                        <li class="nav-item">
-                            <a class="nav-link{% if not favorites %} active{% endif %}" href="{{ request.path }}">My Articles</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link{% if favorites %} active{% endif %}" href="{{ request.path }}?favorites">Favorited Articles</a>
-                        </li>
-                    </ul>
-                </div>
-
-                {% for article in articles %}
-                {% include "articles/_article.html" %}
-                {% endfor %}
-
-            </div>
-
-        </div>
-    </div>
-
-</div>
 {% endblock content %}

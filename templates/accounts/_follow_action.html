@@ -1,6 +1,6 @@
 {% if request.htmx.target == "follow-profile" %}
-{% include "accounts/_follow_btn.html" with button_id="follow-profile" %}
+    {% include "accounts/_follow_btn.html" with button_id="follow-profile" %}
 {% else %}
-{% include "accounts/_follow_btn.html" with button_id="follow-top" %}
-{% include "accounts/_follow_btn.html" with button_id="follow-bottom" %}
+    {% include "accounts/_follow_btn.html" with button_id="follow-top" %}
+    {% include "accounts/_follow_btn.html" with button_id="follow-bottom" %}
 {% endif %}

@@ -14,20 +14,20 @@
 
                 <div class="col-md-9">
                     {% if user.is_authenticated %}
-                    <div class="feed-toggle">
-                        <ul class="nav nav-pills outline-active">
-                            <li class="nav-item">
-                                <a class="nav-link{% if own_feed %} active{% endif %}" href="{{ request.path }}?own">Your Feed</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link{% if not own_feed %} active{% endif %}" href="{{ request.path }}">Global Feed</a>
-                            </li>
-                        </ul>
-                    </div>
+                        <div class="feed-toggle">
+                            <ul class="nav nav-pills outline-active">
+                                <li class="nav-item">
+                                    <a class="nav-link{% if own_feed %} active{% endif %}" href="{{ request.path }}?own">Your Feed</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link{% if not own_feed %} active{% endif %}" href="{{ request.path }}">Global Feed</a>
+                                </li>
+                            </ul>
+                        </div>
                     {% endif %}
 
                     {% for article in articles %}
-                    {% include "articles/_article.html" %}
+                        {% include "articles/_article.html" %}
                     {% endfor %}
 
                 </div>

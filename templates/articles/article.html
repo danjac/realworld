@@ -9,7 +9,7 @@
 
                 <div class="article-meta">
                     {% if article.author.image %}
-                    <a href="{{ article.author.get_absolute_url }}"><img src="{{ article.author.image }}"/></a>
+                        <a href="{{ article.author.get_absolute_url }}"><img src="{{ article.author.image }}"/></a>
                     {% endif %}
                     <div class="info">
                         <a href="{{ article.author.get_absolute_url }}" class="author">{{ article.author.get_full_name }}</a>
@@ -39,14 +39,14 @@
             <div class="article-actions">
                 <div class="article-meta">
                     {% if article.author.image %}
-                    <a href="{{ article.author.get_absolute_url }}"><img src="{{ article.author.image }}"/></a>
+                        <a href="{{ article.author.get_absolute_url }}"><img src="{{ article.author.image }}"/></a>
                     {% endif %}
                     <div class="info">
                         <a href="{{ article.author.get_absolute_url }}" class="author">{{ article.author.get_full_name }}</a>
                         <span class="date">{{ article.created|date }}</span>
                     </div>
-                   {% include "accounts/_follow_btn.html" with button_id="follow-bottom" followed=article.author %}
-                   &nbsp;
+                    {% include "accounts/_follow_btn.html" with button_id="follow-bottom" followed=article.author %}
+                    &nbsp;
                     {% include "articles/_favorite_btn.html" with button_id="favorite-bottom" %}
                 </div>
             </div>
@@ -56,18 +56,18 @@
                 <div class="col-xs-12 col-md-8 offset-md-2">
 
                     {% if comment_form %}
-                    <div id="comment-form">
-                        {% include "comments/_comment_form.html" with form=comment_form %}
-                    </div>
+                        <div id="comment-form">
+                            {% include "comments/_comment_form.html" with form=comment_form %}
+                        </div>
                     {% endif %}
 
                     {% for comment in comments %}
-                    <div id="comment-{{ comment.id }}">
-                    {% include "comments/_comment.html" %}
-                    </div>
+                        <div id="comment-{{ comment.id }}">
+                            {% include "comments/_comment.html" %}
+                        </div>
                     {% endfor %}
 
-               </div>
+                </div>
 
             </div>
 

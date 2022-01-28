@@ -14,7 +14,7 @@
                     {% if form.errors %}
                         <ul class="error-messages">
                             {% for error in form.errors.values %}
-                            {{ error.as_text }}
+                                {{ error.as_text }}
                             {% endfor %}
                         </ul>
                     {% endif %}

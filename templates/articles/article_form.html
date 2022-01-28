@@ -9,7 +9,7 @@
                     {% if form.errors %}
                         <ul class="error-messages">
                             {% for error in form.errors.values %}
-                            {{ error.as_text }}
+                                {{ error.as_text }}
                             {% endfor %}
                         </ul>
                     {% endif %}
@@ -27,7 +27,7 @@
                             <fieldset class="form-group">
                                 {% render_field form.content class+="form-control" placeholder="Write your article (in markdown)" rows=8 %}
                             </fieldset>
-                            <fieldset class="form-group" x-data="{
+                            <fieldset class="form-group" x-data="{# fmt:off #}{
                                 insertTag(tag) {
                                     let tags = $refs.input.value.split(' ').slice(0, -1);
                                     tags.push(tag);
@@ -35,7 +35,7 @@
                                     $refs.input.focus();
                                     $refs.list.innerHTML = '';
                                     }
-                                }">
+                                }"{# fmt:on #}>
                                 {% url 'tags_autocomplete' as tags_autocomplete_url %}
                                 {% render_field form.tags class+="form-control" placeholder="Enter tags" x-ref="input" hx-trigger="keyup changed delay:200ms" hx-target="#tags-list" hx-swap="innerHTML" hx-get=tags_autocomplete_url autocomplete="off" %}
                                 <div class="tag-list" id="tags-list" x-ref="list"></div>
