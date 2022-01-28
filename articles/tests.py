@@ -4,8 +4,8 @@ from django.test import TestCase
 from django.urls import reverse_lazy
 
 
-class TestIndexView(TestCase):
-    url = reverse_lazy("articles:index")
+class TestHomeView(TestCase):
+    url = reverse_lazy("home")
 
     def test_get(self):
         response = self.client.get(self.url)

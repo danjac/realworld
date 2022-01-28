@@ -2,5 +2,5 @@ from django.http import HttpRequest, HttpResponse
 from django.template.response import TemplateResponse
 
 
-def index(request: HttpRequest) -> HttpResponse:
-    return TemplateResponse(request, "articles/index.html")
+def home(request: HttpRequest) -> HttpResponse:
+    return TemplateResponse(request, "articles/home.html")

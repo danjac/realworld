@@ -30,27 +30,30 @@
 
                 <a class="navbar-brand" href="index.html">conduit</a>
 
-                {% with app_name=request.resolver_match.app_name url_name=request.resolver_match.url_name %}
+                {% with url_name=request.resolver_match.url_name %}
                     <ul class="nav navbar-nav pull-xs-right">
                         <li class="nav-item">
-                            <a class="nav-link{% if app_name == 'articles' and url_name == 'index' %} active{% endif %}" href="{% url 'articles:index' %}">Home</a>
+                            <a class="nav-link{% if url_name == 'home' %} active{% endif %}" href="{% url 'home' %}">Home</a>
                         </li>
-                        <li class="nav-item{% if app_name == 'articles' and url_name == 'create' %} active{% endif %}">
+                        <li class="nav-item{% if url_name == 'create_article' %} active{% endif %}">
                             <a class="nav-link" href="/?new">
                                 <i class="ion-compose"></i>&nbsp;New Article
                             </a>
                         </li>
-                        <li class="nav-item{% if app_name == 'users' and url_name == 'settings' %} active{% endif %}">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item{% if url_name == 'settings' %} active{% endif %}">
                             <a class="nav-link" href="">
                                 <i class="ion-gear-a"></i>&nbsp;Settings
                             </a>
                         </li>
-                        <li class="nav-item{% if app_name == 'users' and url_name == 'login' %} active{% endif %}">
+                        {% else %}
+                        <li class="nav-item{% if url_name == 'login' %} active{% endif %}">
                             <a class="nav-link" href="">Sign in</a>
                         </li>
-                        <li class="nav-item{% if app_name == 'users' and url_name == 'register' %} active{% endif %}">
-                            <a class="nav-link" href="">Sign up</a>
+                        <li class="nav-item{% if url_name == 'register' %} active{% endif %}">
+                            <a class="nav-link" href="{% url 'register' %}">Sign up</a>
                         </li>
+                        {% endif %}
                     </ul>
                 {% endwith %}
             </div>
