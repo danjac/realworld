@@ -1,6 +1,4 @@
-from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.db.models import BooleanField, Count, Exists, OuterRef, Value
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
@@ -17,16 +15,7 @@ def home(request: HttpRequest) -> HttpResponse:
 
     articles = (
         Article.objects.select_related("author")
-        .annotate(
-            num_favorites=Count("favorites"),
-            is_favorite=Exists(
-                get_user_model().objects.filter(
-                    pk=request.user.id, favorites=OuterRef("pk")
-                ),
-            )
-            if request.user.is_authenticated
-            else Value(False, output_field=BooleanField()),
-        )
+        .with_favorites(request.user)
         .order_by("-created")
     )
 

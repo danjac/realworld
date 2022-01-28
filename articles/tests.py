@@ -1,12 +1,69 @@
 import http
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
 
 from .models import Article
 
 User = get_user_model()
+
+
+class TestArticleModel(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+
+        cls.author = User.objects.create(
+            email="tester1@gmail.com", name="tester1", password="testpass"
+        )
+
+        cls.other_user = User.objects.create(
+            email="tester2@gmail.com", name="tester2", password="testpass"
+        )
+
+        cls.article = Article.objects.create(
+            title="test",
+            summary="test",
+            content="test",
+            author=cls.author,
+        )
+
+    def test_with_favorites_anonymous_false(self):
+        article = Article.objects.with_favorites(AnonymousUser()).first()
+        self.assertEqual(article.num_favorites, 0)
+        self.assertFalse(article.is_favorite)
+
+    def test_with_favorites_anonymous_true(self):
+        self.article.favorites.add(self.other_user)
+
+        article = Article.objects.with_favorites(AnonymousUser()).first()
+        self.assertEqual(article.num_favorites, 1)
+        self.assertFalse(article.is_favorite)
+
+    def test_with_favorites_same_user_false(self):
+        article = Article.objects.with_favorites(self.author).first()
+        self.assertEqual(article.num_favorites, 0)
+        self.assertFalse(article.is_favorite)
+
+    def test_with_favorites_same_user_true(self):
+        self.article.favorites.add(self.other_user)
+
+        article = Article.objects.with_favorites(self.author).first()
+        self.assertEqual(article.num_favorites, 1)
+        self.assertFalse(article.is_favorite)
+
+    def test_with_favorites_other_user_false(self):
+        article = Article.objects.with_favorites(self.other_user).first()
+        self.assertEqual(article.num_favorites, 0)
+        self.assertFalse(article.is_favorite)
+
+    def test_with_favorites_other_user_true(self):
+        self.article.favorites.add(self.other_user)
+
+        article = Article.objects.with_favorites(self.other_user).first()
+        self.assertEqual(article.num_favorites, 1)
+        self.assertTrue(article.is_favorite)
 
 
 class TestHomeView(TestCase):

@@ -1,10 +1,32 @@
+from articles.models import Article
+from django.contrib.auth import get_user_model
 from django.contrib.auth import login as auth_login
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
 from .forms import UserCreationForm
+
+
+@require_http_methods(["GET"])
+def profile(request: HttpRequest, user_id: int) -> HttpResponse:
+    profile = get_object_or_404(get_user_model())
+    articles = (
+        Article.objects.select_related("author")
+        .with_favorites(request.user)
+        .order_by("-created")
+    )
+
+    return TemplateResponse(
+        request,
+        "accounts/profile.html",
+        {
+            "profile": profile,
+            "articles": articles,
+        },
+    )
 
 
 @require_http_methods(["GET", "POST"])

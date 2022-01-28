@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="home-page" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+    <div class="home-page">
 
         <div class="banner">
             <div class="container">
@@ -9,7 +9,7 @@
             </div>
         </div>
 
-        <div class="container page">
+        <div class="container page" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
             <div class="row">
 
                 <div class="col-md-9">
