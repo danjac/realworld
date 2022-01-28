@@ -1,0 +1,14 @@
+<button class="btn btn-outline-{{ is_favorite|yesno:'secondary,primary' }} btn-sm pull-xs-right"
+        title="{{ is_favorite|yesno:'Remove from Favorites,Add to Favorites' }}"
+        id="favorite-{{ article.id }}"
+        {% if user.is_authenticated and user != article.author %}
+        hx-{{ is_favorite|yesno:'delete,post' }}="{% url 'favorite' article.id %}"
+        hx-push-url="false"
+        hx-target="this"
+        hx-swap="outerHTML"
+        {% else %}
+        disabled
+        {% endif %}>
+    <i class="ion-heart"></i> {{ num_favorites }}
+</button>
+

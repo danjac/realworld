@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="home-page">
+    <div class="home-page" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 
         <div class="banner">
             <div class="container">
@@ -34,9 +34,7 @@
                                     <a href="" class="author">{{ article.author.get_full_name }}</a>
                                     <span class="date">{{ article.created|date }}</span>
                                 </div>
-                                <button class="btn btn-outline-primary btn-sm pull-xs-right">
-                                    <i class="ion-heart"></i> 29
-                                </button>
+                                {% include "articles/_small_favorite_btn.html" with num_favorites=article.num_favorites is_favorite=article.is_favorite %}
                             </div>
                             <a href="{{ article.get_absolute_url }}" class="preview-link">
                                 <h1>{{ article.title }}</h1>

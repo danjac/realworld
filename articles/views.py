@@ -1,4 +1,6 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.db.models import BooleanField, Count, Exists, OuterRef, Value
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
@@ -13,7 +15,20 @@ from .models import Article
 @require_http_methods(["GET"])
 def home(request: HttpRequest) -> HttpResponse:
 
-    articles = Article.objects.select_related("author").order_by("-created")
+    articles = (
+        Article.objects.select_related("author")
+        .annotate(
+            num_favorites=Count("favorites"),
+            is_favorite=Exists(
+                get_user_model().objects.filter(
+                    pk=request.user.id, favorites=OuterRef("pk")
+                ),
+            )
+            if request.user.is_authenticated
+            else Value(False, output_field=BooleanField()),
+        )
+        .order_by("-created")
+    )
 
     if tag := request.GET.get("tag"):
         articles = articles.filter(tags__name__in=[tag])
@@ -31,16 +46,18 @@ def home(request: HttpRequest) -> HttpResponse:
 def article_detail(request: HttpRequest, article_id: int, slug: str) -> HttpResponse:
 
     article = get_object_or_404(Article.objects.select_related("author"), pk=article_id)
-    is_author = request.user.is_authenticated and article.author == request.user
 
-    return TemplateResponse(
-        request,
-        "articles/article.html",
-        {
-            "article": article,
-            "is_author": is_author,
-        },
-    )
+    context = {"article": article, "num_favorites": article.favorites.count()}
+
+    if request.user.is_authenticated:
+        context.update(
+            {
+                "is_author": article.author == request.user,
+                "is_favorite": article.favorites.filter(pk=request.user.id).exists(),
+            }
+        )
+
+    return TemplateResponse(request, "articles/article.html", context)
 
 
 @require_http_methods(["GET", "POST"])
@@ -105,6 +122,39 @@ def delete_article(request: HttpRequest, article_id: int) -> HttpResponse:
     article = get_object_or_404(Article, pk=article_id, author=request.user)
     article.delete()
     return HttpResponseRedirect(reverse("home"))
+
+
+@require_http_methods(["POST", "DELETE"])
+@login_required
+def favorite(request: HttpRequest, article_id: int) -> HttpResponse:
+
+    article = get_object_or_404(
+        Article.objects.select_related("author").exclude(author=request.user),
+        pk=article_id,
+    )
+
+    is_favorite: bool
+
+    if request.method == "DELETE":
+        article.favorites.remove(request.user)
+        is_favorite = False
+    else:
+        article.favorites.add(request.user)
+        is_favorite = True
+
+    return TemplateResponse(
+        request,
+        "articles/_favorite_action.html",
+        {
+            "article": article,
+            "is_favorite": is_favorite,
+            "num_favorites": article.favorites.count(),
+            "is_action": True,
+            "is_detail": False
+            if request.htmx.target == f"favorite-{article.id}"
+            else True,
+        },
+    )
 
 
 @require_http_methods(["GET"])

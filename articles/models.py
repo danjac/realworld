@@ -26,6 +26,10 @@ class Article(models.Model):
 
     tags: list[Tag] = TaggableManager(blank=True)
 
+    favorites: list[User] = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, blank=True, related_name="favorites"
+    )
+
     def __str__(self) -> str:
         return self.title
 

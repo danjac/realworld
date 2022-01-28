@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="article-page">
+    <div class="article-page" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 
         <div class="banner">
             <div class="container">
@@ -21,11 +21,7 @@
                         Follow Eric Simons <span class="counter">(10)</span>
                     </button>
                     &nbsp;&nbsp;
-                    <button class="btn btn-sm btn-outline-primary">
-                        <i class="ion-heart"></i>
-                        &nbsp;
-                        Favorite Post <span class="counter">(29)</span>
-                    </button>
+                    {% include "articles/_favorite_btn.html" with button_id="favorite-top" %}
                 </div>
 
             </div>
@@ -51,18 +47,13 @@
                         <a href="" class="author">Eric Simons</a>
                         <span class="date">January 20th</span>
                     </div>
-
                     <button class="btn btn-sm btn-outline-secondary">
                         <i class="ion-plus-round"></i>
                         &nbsp;
                         Follow Eric Simons
                     </button>
                     &nbsp;
-                    <button class="btn btn-sm btn-outline-primary">
-                        <i class="ion-heart"></i>
-                        &nbsp;
-                        Favorite Post <span class="counter">(29)</span>
-                    </button>
+                    {% include "articles/_favorite_btn.html" with button_id="favorite-bottom" %}
                 </div>
             </div>
 

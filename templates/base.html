@@ -22,7 +22,7 @@
                 crossorigin="anonymous"></script>
 
         </head>
-        <body hx-boost="true" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+        <body hx-boost="true">
             <nav class="navbar navbar-light">
                 <div class="container">
 
@@ -44,9 +44,20 @@
                                         <i class="ion-gear-a"></i>&nbsp;Settings
                                     </a>
                                 </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                       href="javascript:void(0)"
+                                       hx-post="{% url 'logout'%}"
+                                       hx-target="body"
+                                       hx-push-url="true"
+                                       hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+                                        Sign Out
+                                    </a>
+                                </li>
                             {% else %}
                                 <li class="nav-item{% if url_name == 'login' %} active{% endif %}">
-                                    <a class="nav-link" href="">Sign in</a>
+                                    <a class="nav-link" href="{% url 'login' %}">Sign in</a>
                                 </li>
                                 <li class="nav-item{% if url_name == 'register' %} active{% endif %}">
                                     <a class="nav-link" href="{% url 'register' %}">Sign up</a>

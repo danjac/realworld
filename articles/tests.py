@@ -18,17 +18,19 @@ class TestHomeView(TestCase):
 
 
 class TestCreateArticleView(TestCase):
-    def setUp(self):
+    @classmethod
+    def setUpTestData(cls):
 
-        self.author = User(
+        cls.author = User(
             email="tester@gmail.com",
             name="tester",
         )
-        self.author.set_password("testpass")
-        self.author.save()
+        cls.author.set_password("testpass")
+        cls.author.save()
 
-        self.url = reverse("create_article")
+        cls.url = reverse("create_article")
 
+    def setUp(self):
         self.client.login(email=self.author.email, password="testpass")
 
     def test_get(self):
@@ -61,30 +63,31 @@ class TestCreateArticleView(TestCase):
 class TestArticleDetailView(TestCase):
     password = "testpass"
 
-    def setUp(self):
+    @classmethod
+    def setUpTestData(cls):
 
-        self.author = User(
+        cls.author = User(
             email="tester@gmail.com",
             name="tester",
         )
-        self.author.set_password(self.password)
-        self.author.save()
+        cls.author.set_password(cls.password)
+        cls.author.save()
 
-        self.article = Article.objects.create(
+        cls.article = Article.objects.create(
             title="test",
             summary="test",
             content="test",
-            author=self.author,
+            author=cls.author,
         )
 
-        self.url = self.article.get_absolute_url()
+        cls.url = cls.article.get_absolute_url()
 
     def test_get_is_anonymous(self):
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, http.HTTPStatus.OK)
         self.assertEqual(response.context["article"], self.article)
-        self.assertFalse(response.context["is_author"])
+        self.assertNotIn("is_author", response.context)
 
     def test_get_is_author(self):
         self.client.login(email=self.author.email, password=self.password)
@@ -93,3 +96,78 @@ class TestArticleDetailView(TestCase):
         self.assertEqual(response.status_code, http.HTTPStatus.OK)
         self.assertEqual(response.context["article"], self.article)
         self.assertTrue(response.context["is_author"])
+
+
+class TestFavoriteView(TestCase):
+    password = "testpass"
+
+    @classmethod
+    def setUpTestData(cls):
+
+        cls.author = User(
+            email="tester1@gmail.com",
+            name="tester1",
+        )
+        cls.author.set_password(cls.password)
+        cls.author.save()
+
+        cls.other_user = User(
+            email="tester2@gmail.com",
+            name="tester2",
+        )
+        cls.other_user.set_password(cls.password)
+        cls.other_user.save()
+
+        cls.article = Article.objects.create(
+            title="test",
+            summary="test",
+            content="test",
+            author=cls.author,
+        )
+        cls.url = reverse("favorite", args=[cls.article.id])
+
+    def test_add_favorite(self):
+        self.client.login(email=self.other_user.email, password=self.password)
+        response = self.client.post(self.url)
+
+        self.assertEqual(response.status_code, http.HTTPStatus.OK)
+
+        self.assertTrue(self.article.favorites.filter(pk=self.other_user.id).exists())
+
+        self.assertTrue(response.context["is_favorite"])
+        self.assertTrue(response.context["is_detail"])
+
+    def test_same_user(self):
+        self.client.login(email=self.author.email, password=self.password)
+        response = self.client.post(self.url)
+
+        self.assertEqual(response.status_code, http.HTTPStatus.NOT_FOUND)
+
+        self.assertFalse(self.article.favorites.filter(pk=self.other_user.id).exists())
+
+    def test_not_detail(self):
+        self.client.login(email=self.other_user.email, password=self.password)
+        response = self.client.post(
+            self.url, HTTP_HX_TARGET=f"favorite-{self.article.id}"
+        )
+
+        self.assertEqual(response.status_code, http.HTTPStatus.OK)
+
+        self.assertTrue(self.article.favorites.filter(pk=self.other_user.id).exists())
+
+        self.assertTrue(response.context["is_favorite"])
+        self.assertFalse(response.context["is_detail"])
+
+    def test_remove_favorite(self):
+        self.client.login(email=self.other_user.email, password=self.password)
+
+        self.article.favorites.add(self.other_user)
+
+        response = self.client.delete(self.url)
+
+        self.assertEqual(response.status_code, http.HTTPStatus.OK)
+
+        self.assertFalse(self.article.favorites.filter(pk=self.other_user.id).exists())
+
+        self.assertFalse(response.context["is_favorite"])
+        self.assertTrue(response.context["is_detail"])

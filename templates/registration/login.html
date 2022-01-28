@@ -8,7 +8,7 @@
                 <div class="col-md-6 offset-md-3 col-xs-12">
                     <h1 class="text-xs-center">Sign up</h1>
                     <p class="text-xs-center">
-                        <a href="">Have an account?</a>
+                    <a href="{% url 'register' %}">Have an account?</a>
                     </p>
 
                     {% if form.errors %}
@@ -19,24 +19,18 @@
                         </ul>
                     {% endif %}
 
-                    <form method="post" action="{% url 'register' %}">
+                    <form method="post" action="{% url 'login' %}">
                         {% csrf_token %}
                         {% with WIDGET_CLASS="form-control form-control-lg" %}
                             <fieldset class="form-group">
-                                {% render_field form.name placeholder="Your Name" class+=WIDGET_CLASS %}
+                                {% render_field form.username placeholder="Email" class+=WIDGET_CLASS %}
                             </fieldset>
                             <fieldset class="form-group">
-                                {% render_field form.email placeholder="Email" class+=WIDGET_CLASS %}
-                            </fieldset>
-                            <fieldset class="form-group">
-                                {% render_field form.password1 placeholder="Password" class+=WIDGET_CLASS %}
-                            </fieldset>
-                            <fieldset class="form-group">
-                                {% render_field form.password2 placeholder="Repeat Password" class+=WIDGET_CLASS %}
+                                {% render_field form.password placeholder="Password" class+=WIDGET_CLASS %}
                             </fieldset>
                         {% endwith %}
                         <button class="btn btn-lg btn-primary pull-xs-right">
-                            Sign up
+                            Sign in
                         </button>
                     </form>
                 </div>

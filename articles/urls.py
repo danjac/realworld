@@ -21,4 +21,9 @@ urlpatterns = [
         views.delete_article,
         name="delete_article",
     ),
+    path(
+        "article/favorite/<int:article_id>/",
+        views.favorite,
+        name="favorite",
+    ),
 ]

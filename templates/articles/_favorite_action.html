@@ -1,0 +1,7 @@
+{% if is_detail %}
+{% include "articles/_favorite_btn.html" with button_id="favorite-top" %}
+{% include "articles/_favorite_btn.html" with button_id="favorite-bottom" %}
+{% else %}
+{% include "articles/_small_favorite_btn.html" %}
+{% endif %}
+

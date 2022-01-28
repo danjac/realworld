@@ -8,8 +8,8 @@
                 <div class="col-md-10 offset-md-1 col-xs-12">
                     {% if form.errors %}
                         <ul class="error-messages">
-                            {% for error in form.errors %}
-                                <li>{{ error }}</li>
+                            {% for error in form.errors.values %}
+                            {{ error.as_text }}
                             {% endfor %}
                         </ul>
                     {% endif %}
