@@ -14,3 +14,5 @@ To install:
 3. `pip install -r requirements.txt`
 4. `./manage.py migrate`
 5. `./manage.py runserver`
+
+**Note: this is just a reference implementation and is not intended for production use.**
