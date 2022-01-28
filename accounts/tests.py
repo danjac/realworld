@@ -57,6 +57,52 @@ class TestUserCreationForm(TestCase):
         self.assertFalse(form.is_valid())
 
 
+class TestFollowView(TestCase):
+    password = "testpass"
+
+    @classmethod
+    def setUpTestData(cls):
+
+        cls.user = User(
+            email="tester1@gmail.com",
+            name="tester1",
+        )
+        cls.user.set_password(cls.password)
+        cls.user.save()
+
+        cls.other_user = User(
+            email="tester2@gmail.com",
+            name="tester2",
+        )
+        cls.other_user.set_password(cls.password)
+        cls.other_user.save()
+
+        cls.url = reverse("follow", args=[cls.user.id])
+
+    def test_follow(self):
+        self.client.login(email=self.other_user, password=self.password)
+        response = self.client.post(self.url)
+
+        self.assertEqual(response.status_code, http.HTTPStatus.OK)
+        self.assertTrue(self.user.followers.filter(pk=self.other_user.id).exists())
+
+    def test_same_user(self):
+        self.client.login(email=self.user, password=self.password)
+        response = self.client.post(self.url)
+
+        self.assertEqual(response.status_code, http.HTTPStatus.NOT_FOUND)
+        self.assertFalse(self.user.followers.filter(pk=self.user.id).exists())
+
+    def test_unfollow(self):
+        self.client.login(email=self.other_user, password=self.password)
+        self.user.followers.add(self.other_user)
+
+        response = self.client.delete(self.url)
+
+        self.assertEqual(response.status_code, http.HTTPStatus.OK)
+        self.assertFalse(self.user.followers.filter(pk=self.other_user.id).exists())
+
+
 class TestRegisterView(TestCase):
     url = reverse_lazy("register")
 

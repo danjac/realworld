@@ -79,5 +79,6 @@ def follow(request: HttpRequest, user_id: int) -> HttpResponse:
         {
             "followed": user,
             "is_following": is_following,
+            "is_action": True,
         },
     )
