@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+{% load widget_tweaks %}
+<div class="editor-page">
+    <div class="container page">
+        <div class="row">
+
+            <div class="col-md-10 offset-md-1 col-xs-12">
+                {% if form.errors %}
+                <ul class="error-messages">
+                    {% for error in form.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                <form method="post" action="{{ request.path }}">
+                    {% csrf_token %}
+                    <fieldset>
+                        <fieldset class="form-group">
+                            {% render_field form.title class+="form-control form-control-lg" placeholder="Article Title" %}
+                        </fieldset>
+                        <fieldset class="form-group">
+                            {# see https://github.com/jazzband/django-widget-tweaks/issues/85 #}
+                            {{ form.summary|attr:"placeholder:What's this article about?"|add_class:"form-control" }}
+                        </fieldset>
+                        <fieldset class="form-group">
+                            {% render_field form.content class+="form-control" placeholder="Write your article (in markdown)" rows=8 %}
+                        </fieldset>
+                        <fieldset class="form-group" x-data>
+                            {% render_field form.tags class+="form-control" placeholder="Enter tags" x-ref="input" %}
+                            <div class="tag-list"></div>
+                        </fieldset>
+                        <button class="btn btn-lg pull-xs-right btn-primary" type="submit">
+                            {{ article|yesno:"Save,Publish" }} Article
+                        </button>
+                    </fieldset>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock content %}

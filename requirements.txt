@@ -1,3 +1,5 @@
 django==4.0.1
 django-htmx===1.8.0
 django-widget-tweaks==1.4.12
+django-taggit==2.1.0
+markdown==3.3.6

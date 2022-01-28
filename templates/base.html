@@ -28,7 +28,7 @@
         <nav class="navbar navbar-light">
             <div class="container">
 
-                <a class="navbar-brand" href="index.html">conduit</a>
+                <a class="navbar-brand" href="{% url 'home' %}">conduit</a>
 
                 {% with url_name=request.resolver_match.url_name %}
                     <ul class="nav navbar-nav pull-xs-right">
@@ -36,7 +36,7 @@
                             <a class="nav-link{% if url_name == 'home' %} active{% endif %}" href="{% url 'home' %}">Home</a>
                         </li>
                         <li class="nav-item{% if url_name == 'create_article' %} active{% endif %}">
-                            <a class="nav-link" href="/?new">
+                            <a class="nav-link" href="{% url 'create_article' %}">
                                 <i class="ion-compose"></i>&nbsp;New Article
                             </a>
                         </li>

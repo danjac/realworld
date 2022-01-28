@@ -27,10 +27,10 @@ class User(AbstractUser):
     first_name = None
     last_name = None
 
-    email = models.EmailField("Email Address", unique=True)
-    name = models.CharField(max_length=60)
-    bio = models.TextField(blank=True)
-    image = models.URLField(null=True, blank=True)
+    email: str = models.EmailField("Email Address", unique=True)
+    name: str = models.CharField(max_length=60)
+    bio: str = models.TextField(blank=True)
+    image: str | None = models.URLField(null=True, blank=True)
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
