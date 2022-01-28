@@ -14,6 +14,10 @@ from .models import Article
 def home(request: HttpRequest) -> HttpResponse:
 
     articles = Article.objects.select_related("author").order_by("-created")
+
+    if tag := request.GET.get("tag"):
+        articles = articles.filter(tags__name__in=[tag])
+
     tags = Tag.objects.all()
 
     return TemplateResponse(
@@ -105,9 +109,11 @@ def delete_article(request: HttpRequest, article_id: int) -> HttpResponse:
 
 @require_http_methods(["GET"])
 def tags_autocomplete(request: HttpRequest) -> HttpResponse:
-    search: str = ""
 
     # find the latest item in tag string
+
+    search: str = ""
+
     try:
         search = request.GET["tags"].split(" ")[-1].strip()
     except (KeyError, IndexError):

@@ -2,7 +2,7 @@ import http
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 
 from .models import Article
 
@@ -15,6 +15,47 @@ class TestHomeView(TestCase):
     def test_get(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, http.HTTPStatus.OK)
+
+
+class TestCreateArticleView(TestCase):
+    def setUp(self):
+
+        self.author = User(
+            email="tester@gmail.com",
+            name="tester",
+        )
+        self.author.set_password("testpass")
+        self.author.save()
+
+        self.url = reverse("create_article")
+
+        self.client.login(email=self.author.email, password="testpass")
+
+    def test_get(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, http.HTTPStatus.OK)
+
+    def test_post_invalid(self):
+        response = self.client.post(self.url, {})
+        self.assertEqual(response.status_code, http.HTTPStatus.OK)
+
+    def test_post_valid(self):
+        response = self.client.post(
+            self.url,
+            {
+                "title": "First Post",
+                "summary": "test",
+                "content": "test",
+                "tags": "python django html",
+            },
+        )
+
+        article = Article.objects.get()
+
+        self.assertRedirects(response, article.get_absolute_url())
+        self.assertEqual(article.author, self.author)
+        self.assertEqual(article.title, "First Post")
+        self.assertEqual(set(article.tags.names()), {"python", "django", "html"})
 
 
 class TestArticleDetailView(TestCase):

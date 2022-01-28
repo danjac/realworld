@@ -28,13 +28,13 @@
                                 {% render_field form.content class+="form-control" placeholder="Write your article (in markdown)" rows=8 %}
                             </fieldset>
                             <fieldset class="form-group" x-data="{
-                                 insertTag(tag) {
+                                insertTag(tag) {
                                     let tags = $refs.input.value.split(' ').slice(0, -1);
                                     tags.push(tag);
                                     $refs.input.value = tags.join(' ');
                                     $refs.input.focus();
                                     $refs.list.innerHTML = '';
-                                 }
+                                    }
                                 }">
                                 {% url 'tags_autocomplete' as tags_autocomplete_url %}
                                 {% render_field form.tags class+="form-control" placeholder="Enter tags" x-ref="input" hx-trigger="keyup changed delay:200ms" hx-target="#tags-list" hx-swap="innerHTML" hx-get=tags_autocomplete_url autocomplete="off" %}
