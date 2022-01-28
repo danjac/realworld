@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from comments.forms import CommentForm
+from comments.models import Comment
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -44,7 +48,17 @@ def article_detail(request: HttpRequest, article_id: int, slug: str) -> HttpResp
 
     article = get_object_or_404(Article.objects.select_related("author"), pk=article_id)
 
-    context = {"article": article, "num_favorites": article.favorites.count()}
+    comments = (
+        Comment.objects.filter(article=article)
+        .select_related("author")
+        .order_by("-created")
+    )
+
+    context = {
+        "article": article,
+        "num_favorites": article.favorites.count(),
+        "comments": comments,
+    }
 
     if request.user.is_authenticated:
         context.update(
@@ -54,6 +68,7 @@ def article_detail(request: HttpRequest, article_id: int, slug: str) -> HttpResp
                     pk=request.user.id
                 ).exists(),
                 "is_favorite": article.favorites.filter(pk=request.user.id).exists(),
+                "comment_form": CommentForm(),
             }
         )
 
@@ -100,9 +115,7 @@ def edit_article(request: HttpRequest, article_id: int) -> HttpResponse:
         )
 
     if (form := ArticleForm(request.POST, instance=article)).is_valid():
-
-        article = form.save()
-
+        form.save()
         return HttpResponseRedirect(article.get_absolute_url())
 
     return TemplateResponse(
@@ -115,7 +128,7 @@ def edit_article(request: HttpRequest, article_id: int) -> HttpResponse:
     )
 
 
-@require_http_methods(["POST"])
+@require_http_methods(["DELETE"])
 @login_required
 def delete_article(request: HttpRequest, article_id: int) -> HttpResponse:
 

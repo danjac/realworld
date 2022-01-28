@@ -1,0 +1,32 @@
+<div class="card">
+    <div class="card-block">
+        <p class="card-text">{{ comment.content|linebreaksbr }}</p>
+    </div>
+    <div class="card-footer">
+        {% if comment.author.image %}
+        <a href="{{ comment.author.get_absolute_url }}" class="comment-author">
+            <img src="{{ comment.author.image }}" class="comment-author-img"/>
+        </a>
+        {% endif %}
+        &nbsp;
+        <a href="{{ comment.author.get_absolute_url }}" class="comment-author">{{ comment.author.get_full_name }}</a>
+        <span class="date-posted">{{ comment.created|date }}</span>
+
+        {% if user.is_authenticated and user == comment.author %}
+        <span class="mod-options"
+               hx-swap="innerHTML"
+               hx-target="#comment-{{ comment.id }}">
+            <i class="ion-edit"
+               hx-get="{% url 'edit_comment' comment.id %}"
+            ></i>
+            <i class="ion-trash-a"
+               hx-delete="{% url 'delete_comment' comment.id %}"
+               hx-swap="outerHTML"
+               hx-confirm="Delete this comment?"></i>
+        </span>
+        {% endif %}
+
+    </div>
+</div>
+
+
