@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "accounts",
     "articles",
+    "comments",
 ]
 
 MIDDLEWARE = [
