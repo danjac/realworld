@@ -46,7 +46,10 @@ def home(request: HttpRequest) -> HttpResponse:
 @require_http_methods(["GET"])
 def article_detail(request: HttpRequest, article_id: int, slug: str) -> HttpResponse:
 
-    article = get_object_or_404(Article.objects.select_related("author"), pk=article_id)
+    article = get_object_or_404(
+        Article.objects.select_related("author").with_favorites(request.user),
+        pk=article_id,
+    )
 
     comments = (
         Comment.objects.filter(article=article)
@@ -56,18 +59,15 @@ def article_detail(request: HttpRequest, article_id: int, slug: str) -> HttpResp
 
     context = {
         "article": article,
-        "num_favorites": article.favorites.count(),
         "comments": comments,
+        "is_favorite": article.is_favorite,
+        "num_favorites": article.num_favorites,
     }
 
     if request.user.is_authenticated:
         context.update(
             {
                 "is_author": article.author == request.user,
-                "is_following": article.author.followers.filter(
-                    pk=request.user.id
-                ).exists(),
-                "is_favorite": article.favorites.filter(pk=request.user.id).exists(),
                 "comment_form": CommentForm(),
             }
         )
