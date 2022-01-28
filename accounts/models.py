@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+from django.urls import reverse
 
 
 class UserManager(BaseUserManager):
@@ -32,11 +33,16 @@ class User(AbstractUser):
     bio: str = models.TextField(blank=True)
     image: str | None = models.URLField(null=True, blank=True)
 
+    followers = models.ManyToManyField("self", blank=True)
+
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+
+    def get_absolute_url(self) -> str:
+        return reverse("profile", args=[self.id])
 
     def get_full_name(self) -> str:
         return self.name

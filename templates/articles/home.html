@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="home-page">
+    <div class="home-page" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 
         <div class="banner">
             <div class="container">
@@ -9,39 +9,25 @@
             </div>
         </div>
 
-        <div class="container page" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+        <div class="container page">
             <div class="row">
 
                 <div class="col-md-9">
+                    {% if user.is_authenticated %}
                     <div class="feed-toggle">
                         <ul class="nav nav-pills outline-active">
                             <li class="nav-item">
-                                <a class="nav-link disabled" href="">Your Feed</a>
+                                <a class="nav-link{% if own_feed %} active{% endif %}" href="{{ request.path }}?own">Your Feed</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" href="">Global Feed</a>
+                                <a class="nav-link{% if not own_feed %} active{% endif %}" href="{{ request.path }}">Global Feed</a>
                             </li>
                         </ul>
                     </div>
+                    {% endif %}
 
                     {% for article in articles %}
-                        <div class="article-preview">
-                            <div class="article-meta">
-                                {% if article.author.image %}
-                                    <a href="profile.html"><img src="{{ article.author.image }}"/></a>
-                                {% endif %}
-                                <div class="info">
-                                    <a href="" class="author">{{ article.author.get_full_name }}</a>
-                                    <span class="date">{{ article.created|date }}</span>
-                                </div>
-                                {% include "articles/_small_favorite_btn.html" with num_favorites=article.num_favorites is_favorite=article.is_favorite %}
-                            </div>
-                            <a href="{{ article.get_absolute_url }}" class="preview-link">
-                                <h1>{{ article.title }}</h1>
-                                <p>{{ article.summary }}</p>
-                                <span>Read more...</span>
-                            </a>
-                        </div>
+                    {% include "articles/_article.html" %}
                     {% endfor %}
 
                 </div>

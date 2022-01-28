@@ -1,0 +1,27 @@
+<div class="article-preview">
+    <div class="article-meta">
+        {% if article.author.image %}
+            <a href="{{ article.author.get_absolute_url }}"><img src="{{ article.author.image }}"/></a>
+        {% endif %}
+        <div class="info">
+            <a href="{{ article.author.get_absolute_url }}" class="author">{{ article.author.get_full_name }}</a>
+            <span class="date">{{ article.created|date }}</span>
+        </div>
+        {% include "articles/_small_favorite_btn.html" with num_favorites=article.num_favorites is_favorite=article.is_favorite %}
+    </div>
+    <a href="{{ article.get_absolute_url }}" class="preview-link">
+        <h1>{{ article.title }}</h1>
+        <p>{{ article.summary }}</p>
+        <span>Read more...</span>
+        {% with tags=article.tags.all %}
+        {% if tags %}
+        <ul class="tag-list">
+            {% for tag in tags %}
+            <li class="tag-default tag-pill tag-outline">{{ tag }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+    </a>
+</div>
+

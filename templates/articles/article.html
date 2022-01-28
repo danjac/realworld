@@ -9,17 +9,13 @@
 
                 <div class="article-meta">
                     {% if article.author.image %}
-                        <a href=""><img src="{{ article.author.image }}"/></a>
+                    <a href="{{ article.author.get_absolute_url }}"><img src="{{ article.author.image }}"/></a>
                     {% endif %}
                     <div class="info">
-                        <a href="" class="author">{{ article.author.get_full_name }}</a>
+                        <a href="{{ article.author.get_absolute_url }}" class="author">{{ article.author.get_full_name }}</a>
                         <span class="date">{{ article.created|date }}</span>
                     </div>
-                    <button class="btn btn-sm btn-outline-secondary">
-                        <i class="ion-plus-round"></i>
-                        &nbsp;
-                        Follow Eric Simons <span class="counter">(10)</span>
-                    </button>
+                    {% include "accounts/_follow_btn.html" with button_id="follow-top" followed=article.author %}
                     &nbsp;&nbsp;
                     {% include "articles/_favorite_btn.html" with button_id="favorite-top" %}
                 </div>
@@ -42,17 +38,15 @@
 
             <div class="article-actions">
                 <div class="article-meta">
-                    <a href="profile.html"><img src="http://i.imgur.com/Qr71crq.jpg"/></a>
+                    {% if article.author.image %}
+                    <a href="{{ article.author.get_absolute_url }}"><img src="{{ article.author.image }}"/></a>
+                    {% endif %}
                     <div class="info">
-                        <a href="" class="author">Eric Simons</a>
-                        <span class="date">January 20th</span>
+                        <a href="{{ article.author.get_absolute_url }}" class="author">{{ article.author.get_full_name }}</a>
+                        <span class="date">{{ article.created|date }}</span>
                     </div>
-                    <button class="btn btn-sm btn-outline-secondary">
-                        <i class="ion-plus-round"></i>
-                        &nbsp;
-                        Follow Eric Simons
-                    </button>
-                    &nbsp;
+                   {% include "accounts/_follow_btn.html" with button_id="follow-bottom" followed=article.author %}
+                   &nbsp;
                     {% include "articles/_favorite_btn.html" with button_id="favorite-bottom" %}
                 </div>
             </div>

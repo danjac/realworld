@@ -1,0 +1,16 @@
+<button class="btn btn-sm btn-outline-{{ is_following|yesno:'secondary,primary' }} action-btn"
+        {% if user.is_authenticated and user != followed %}
+        hx-{{ is_following|yesno:'delete,post' }}="{% url 'follow' followed.id %}"
+        hx-push-url="false"
+        hx-target="this"
+        hx-swap="outerHTML"
+        {% if is_action and button_id != request.htmx.target %}hx-swap-oob="true"{% endif %}
+        {% else %}
+        disabled
+        {% endif %}
+        id="{{ button_id }}">
+    <i class="ion-{{ is_following|yesno:'plus,minus' }}-round"></i>
+    &nbsp;
+    Follow {{ followed.name }}
+</button>
+

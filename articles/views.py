@@ -16,8 +16,12 @@ def home(request: HttpRequest) -> HttpResponse:
     articles = (
         Article.objects.select_related("author")
         .with_favorites(request.user)
+        .prefetch_related("tags")
         .order_by("-created")
     )
+
+    if own_feed := request.user.is_authenticated and "own" in request.GET:
+        articles = articles.filter(author=request.user)
 
     if tag := request.GET.get("tag"):
         articles = articles.filter(tags__name__in=[tag])
@@ -27,7 +31,11 @@ def home(request: HttpRequest) -> HttpResponse:
     return TemplateResponse(
         request,
         "articles/home.html",
-        {"articles": articles, "tags": tags},
+        {
+            "articles": articles,
+            "own_feed": own_feed,
+            "tags": tags,
+        },
     )
 
 
@@ -42,6 +50,9 @@ def article_detail(request: HttpRequest, article_id: int, slug: str) -> HttpResp
         context.update(
             {
                 "is_author": article.author == request.user,
+                "is_following": article.author.followers.filter(
+                    pk=request.user.id
+                ).exists(),
                 "is_favorite": article.favorites.filter(pk=request.user.id).exists(),
             }
         )
