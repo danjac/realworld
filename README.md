@@ -1,6 +1,8 @@
 
 Implementation of real-world application: https://github.com/gothinkster/realworld/
 
+An in-depth discussion of the project can be found [here](https://danjacob.net/posts/anatomyofdjangohtmxproject/).
+
 Technology:
 
 * [Django](https://djangoproject.com)
