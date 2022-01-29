@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
+from django_htmx.http import HttpResponseClientRedirect
 from taggit.models import Tag
 
 from .forms import ArticleForm
@@ -81,7 +82,9 @@ def create_article(request: HttpRequest) -> HttpResponse:
 
     if request.method == "GET":
         return TemplateResponse(
-            request, "articles/article_form.html", {"form": ArticleForm()}
+            request,
+            "articles/article_form.html",
+            {"form": ArticleForm()},
         )
 
     if (form := ArticleForm(request.POST)).is_valid():
@@ -93,9 +96,9 @@ def create_article(request: HttpRequest) -> HttpResponse:
         # save tags
         form.save_m2m()
 
-        return HttpResponseRedirect(article.get_absolute_url())
+        return HttpResponseClientRedirect(article.get_absolute_url())
 
-    return TemplateResponse(request, "articles/article_form.html", {"form": form})
+    return TemplateResponse(request, "articles/_article_form.html", {"form": form})
 
 
 @require_http_methods(["GET", "POST"])
@@ -105,6 +108,7 @@ def edit_article(request: HttpRequest, article_id: int) -> HttpResponse:
     article = get_object_or_404(Article, pk=article_id, author=request.user)
 
     if request.method == "GET":
+
         return TemplateResponse(
             request,
             "articles/article_form.html",
@@ -116,11 +120,11 @@ def edit_article(request: HttpRequest, article_id: int) -> HttpResponse:
 
     if (form := ArticleForm(request.POST, instance=article)).is_valid():
         form.save()
-        return HttpResponseRedirect(article.get_absolute_url())
+        return HttpResponseClientRedirect(article.get_absolute_url())
 
     return TemplateResponse(
         request,
-        "articles/article_form.html",
+        "articles/_article_form.html",
         {
             "form": form,
             "article": article,

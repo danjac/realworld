@@ -2,11 +2,12 @@ from articles.models import Article
 from django.contrib.auth import get_user_model
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
+from django_htmx.http import HttpResponseClientRedirect
 
 from .forms import SettingsForm, UserCreationForm
 
@@ -54,13 +55,9 @@ def settings(request: HttpRequest) -> HttpResponse:
 
     if (form := SettingsForm(request.POST, instance=request.user)).is_valid():
         form.save()
-        return HttpResponseRedirect(request.user.get_absolute_url())
+        return HttpResponseClientRedirect(request.user.get_absolute_url())
 
-    return TemplateResponse(
-        request,
-        "accounts/settings.html",
-        {"form": SettingsForm(instance=request.user)},
-    )
+    return TemplateResponse(request, "accounts/_settings.html", {"form": form})
 
 
 @require_http_methods(["GET", "POST"])
@@ -75,9 +72,9 @@ def register(request: HttpRequest) -> HttpResponse:
         user = form.save()
         auth_login(request, user)
 
-        return HttpResponseRedirect(reverse("home"))
+        return HttpResponseClientRedirect(reverse("home"))
 
-    return TemplateResponse(request, "registration/register.html", {"form": form})
+    return TemplateResponse(request, "registration/_register.html", {"form": form})
 
 
 @require_http_methods(["POST", "DELETE"])

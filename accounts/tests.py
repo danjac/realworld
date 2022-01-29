@@ -113,5 +113,5 @@ class TestRegisterView(TestCase):
                 "password": "testpass1",
             },
         )
-        self.assertRedirects(response, reverse("home"))
+        self.assertEqual(response.headers["HX-Redirect"], reverse("home"))
         self.assertTrue(User.objects.filter(email="tester@gmail.com").exists())

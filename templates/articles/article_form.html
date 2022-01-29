@@ -1,50 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
-    {% load widget_tweaks %}
     <div class="editor-page">
         <div class="container page">
             <div class="row">
 
                 <div class="col-md-10 offset-md-1 col-xs-12">
-                    {% if form.errors %}
-                        <ul class="error-messages">
-                            {% for error in form.errors.values %}
-                                {{ error.as_text }}
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-
-                    <form method="post" action="{{ request.path }}">
-                        {% csrf_token %}
-                        <fieldset>
-                            <fieldset class="form-group">
-                                {% render_field form.title class+="form-control form-control-lg" placeholder="Article Title" %}
-                            </fieldset>
-                            <fieldset class="form-group">
-                                {# see https://github.com/jazzband/django-widget-tweaks/issues/85 #}
-                                {{ form.summary|attr:"placeholder:What's this article about?"|add_class:"form-control" }}
-                            </fieldset>
-                            <fieldset class="form-group">
-                                {% render_field form.content class+="form-control" placeholder="Write your article (in markdown)" rows=8 %}
-                            </fieldset>
-                            <fieldset class="form-group" x-data="{# fmt:off #}{
-                                insertTag(tag) {
-                                    let tags = $refs.input.value.split(' ').slice(0, -1);
-                                    tags.push(tag);
-                                    $refs.input.value = tags.join(' ');
-                                    $refs.input.focus();
-                                    $refs.list.innerHTML = '';
-                                    }
-                                }"{# fmt:on #}>
-                                {% url 'tags_autocomplete' as tags_autocomplete_url %}
-                                {% render_field form.tags class+="form-control" placeholder="Enter tags" x-ref="input" hx-trigger="keyup changed delay:200ms" hx-target="#tags-list" hx-swap="innerHTML" hx-get=tags_autocomplete_url autocomplete="off" %}
-                                <div class="tag-list" id="tags-list" x-ref="list"></div>
-                            </fieldset>
-                            <button class="btn btn-lg pull-xs-right btn-primary" type="submit">
-                                {{ article|yesno:"Save,Publish" }} Article
-                            </button>
-                        </fieldset>
-                    </form>
+                  {% include "articles/_article_form.html" %}
                 </div>
 
             </div>

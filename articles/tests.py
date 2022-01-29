@@ -111,7 +111,7 @@ class TestCreateArticleView(TestCase):
 
         article = Article.objects.get()
 
-        self.assertRedirects(response, article.get_absolute_url())
+        self.assertEqual(response.headers["HX-Redirect"], article.get_absolute_url())
         self.assertEqual(article.author, self.author)
         self.assertEqual(article.title, "First Post")
         self.assertEqual(set(article.tags.names()), {"python", "django", "html"})

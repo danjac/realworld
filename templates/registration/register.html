@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load widget_tweaks %}
 {% block content %}
     <div class="auth-page">
         <div class="container page">
@@ -10,32 +9,7 @@
                     <p class="text-xs-center">
                         <a href="">Have an account?</a>
                     </p>
-
-                    {% if form.errors %}
-                        <ul class="error-messages">
-                            {% for error in form.errors.values %}
-                                {{ error.as_text }}
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-
-                    <form method="post" action="{% url 'register' %}">
-                        {% csrf_token %}
-                        {% with WIDGET_CLASS="form-control form-control-lg" %}
-                            <fieldset class="form-group">
-                                {% render_field form.name placeholder="Your Name" class+=WIDGET_CLASS %}
-                            </fieldset>
-                            <fieldset class="form-group">
-                                {% render_field form.email placeholder="Email" class+=WIDGET_CLASS %}
-                            </fieldset>
-                            <fieldset class="form-group">
-                                {% render_field form.password placeholder="Password" class+=WIDGET_CLASS %}
-                            </fieldset>
-                        {% endwith %}
-                        <button class="btn btn-lg btn-primary pull-xs-right">
-                            Sign up
-                        </button>
-                    </form>
+                    {% include "registration/_register.html" %}
                 </div>
 
             </div>
