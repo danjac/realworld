@@ -1,13 +1,13 @@
 
-Implementation of real-world application: https://github.com/gothinkster/realworld/
+Implementation of real-world application: https://github.com/gothinkster/realworld/ using Django and HTMX.
 
-An in-depth discussion of the project can be found [here](https://danjacob.net/posts/anatomyofdjangohtmxproject/).
+An in-depth discussion of this implementation can be found [here](https://danjacob.net/posts/anatomyofdjangohtmxproject/).
 
-Technology:
+Tech Stack:
 
 * [Django](https://djangoproject.com)
-* [Alpine](https://alpinejs.dev)
 * [HTMX](https://htmx.org)
+* [Alpine](https://alpinejs.dev)
 
 To install:
 
