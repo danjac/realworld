@@ -182,7 +182,7 @@ def tags_autocomplete(request: HttpRequest) -> HttpResponse:
     search: str = ""
 
     try:
-        search = request.GET["tags"].split(" ")[-1].strip()
+        search = request.GET["tags"].split()[-1].strip()
     except (KeyError, IndexError):
         pass
 

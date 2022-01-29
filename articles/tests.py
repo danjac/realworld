@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
+from taggit.models import Tag
 
 from .models import Article
 
@@ -228,3 +229,23 @@ class TestFavoriteView(TestCase):
 
         self.assertFalse(response.context["is_favorite"])
         self.assertTrue(response.context["is_detail"])
+
+
+class TestTagsAutocomplete(TestCase):
+    url = reverse_lazy("tags_autocomplete")
+
+    @classmethod
+    def setUpTestData(cls):
+        Tag.objects.create(name="Python")
+
+    def test_with_tags(self):
+        response = self.client.get(self.url, {"tags": "Python"})
+        self.assertEqual(len(response.context["tags"]), 1)
+
+    def test_with_no_tags(self):
+        response = self.client.get(self.url, {"tags": "Django"})
+        self.assertEqual(len(response.context["tags"]), 0)
+
+    def test_empty_query_string(self):
+        response = self.client.get(self.url)
+        self.assertEqual(len(response.context["tags"]), 0)
