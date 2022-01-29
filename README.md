@@ -9,7 +9,7 @@ Tech Stack:
 * [HTMX](https://htmx.org)
 * [Alpine](https://alpinejs.dev)
 
-To install:
+To install and run locally:
 
 ```bash
 git clone https://github.com/danjac/realworld/ && cd realworld
