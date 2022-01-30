@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from articles.models import Article
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
+from realworld.articles.models import Article
 
 User = get_user_model()
 

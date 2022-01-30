@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from comments.forms import CommentForm
-from comments.models import Comment
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -9,6 +7,8 @@ from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 from django_htmx.http import HttpResponseClientRedirect
+from realworld.comments.forms import CommentForm
+from realworld.comments.models import Comment
 from taggit.models import Tag
 
 from .forms import ArticleForm

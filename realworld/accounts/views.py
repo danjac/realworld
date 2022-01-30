@@ -1,4 +1,3 @@
-from articles.models import Article
 from django.contrib.auth import get_user_model
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
@@ -8,6 +7,7 @@ from django.template.response import TemplateResponse
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 from django_htmx.http import HttpResponseClientRedirect
+from realworld.articles.models import Article
 
 from .forms import SettingsForm, UserCreationForm
 

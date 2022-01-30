@@ -40,9 +40,9 @@ INSTALLED_APPS = [
     "django_htmx",
     "taggit",
     "widget_tweaks",
-    "accounts",
-    "articles",
-    "comments",
+    "realworld.accounts",
+    "realworld.articles",
+    "realworld.comments",
 ]
 
 MIDDLEWARE = [

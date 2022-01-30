@@ -1,6 +1,6 @@
 import http
 
-from articles.models import Article
+from realworld.articles.models import Article
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
