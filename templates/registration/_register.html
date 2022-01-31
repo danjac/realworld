@@ -1,11 +1,11 @@
 {% load widget_tweaks %}
 <form hx-post="{{ request.path }}" hx-target="this" hx-swap="innerHTML">
     {% if form.errors %}
-    <ul class="error-messages">
-        {% for error in form.errors.values %}
-            {{ error.as_text }}
-        {% endfor %}
-    </ul>
+        <ul class="error-messages">
+            {% for error in form.errors.values %}
+                {{ error.as_text }}
+            {% endfor %}
+        </ul>
     {% endif %}
     {% csrf_token %}
 
