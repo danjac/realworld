@@ -70,21 +70,21 @@ class TestFollowView(TestCase):
         cls.url = reverse("follow", args=[cls.user.id])
 
     def test_follow(self):
-        self.client.login(email=self.other_user, password=self.password)
+        self.client.force_login(self.other_user)
         response = self.client.post(self.url)
 
         self.assertEqual(response.status_code, http.HTTPStatus.OK)
         self.assertTrue(self.user.followers.filter(pk=self.other_user.id).exists())
 
     def test_same_user(self):
-        self.client.login(email=self.user, password=self.password)
+        self.client.force_login(self.user)
         response = self.client.post(self.url)
 
         self.assertEqual(response.status_code, http.HTTPStatus.NOT_FOUND)
         self.assertFalse(self.user.followers.filter(pk=self.user.id).exists())
 
     def test_unfollow(self):
-        self.client.login(email=self.other_user, password=self.password)
+        self.client.force_login(self.other_user)
         self.user.followers.add(self.other_user)
 
         response = self.client.delete(self.url)

@@ -1,9 +1,9 @@
 import http
 
-from realworld.articles.models import Article
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
+from realworld.articles.models import Article
 
 from .models import Comment
 
@@ -11,7 +11,6 @@ User = get_user_model()
 
 
 class TestAddCommentView(TestCase):
-    password = "testpass"
 
     @classmethod
     def setUpTestData(cls):
@@ -20,7 +19,6 @@ class TestAddCommentView(TestCase):
             email="tester@gmail.com",
             name="tester",
         )
-        cls.author.set_password(cls.password)
         cls.author.save()
 
         cls.article = Article.objects.create(
@@ -33,7 +31,7 @@ class TestAddCommentView(TestCase):
         cls.url = reverse("add_comment", args=[cls.article.id])
 
     def test_add_comment(self):
-        self.client.login(email=self.author.email, password=self.password)
+        self.client.force_login(self.author)
 
         response = self.client.post(self.url, {"content": "test"})
         self.assertEqual(response.status_code, http.HTTPStatus.OK)

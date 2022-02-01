@@ -89,7 +89,7 @@ class TestCreateArticleView(TestCase):
         cls.url = reverse("create_article")
 
     def setUp(self):
-        self.client.login(email=self.author.email, password="testpass")
+        self.client.force_login(self.author)
 
     def test_get(self):
         response = self.client.get(self.url)
@@ -148,7 +148,7 @@ class TestArticleDetailView(TestCase):
         self.assertNotIn("is_author", response.context)
 
     def test_get_is_author(self):
-        self.client.login(email=self.author.email, password=self.password)
+        self.client.force_login(self.author)
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, http.HTTPStatus.OK)
@@ -185,7 +185,7 @@ class TestFavoriteView(TestCase):
         cls.url = reverse("favorite", args=[cls.article.id])
 
     def test_add_favorite(self):
-        self.client.login(email=self.other_user.email, password=self.password)
+        self.client.force_login(self.other_user)
         response = self.client.post(self.url)
 
         self.assertEqual(response.status_code, http.HTTPStatus.OK)
@@ -196,7 +196,7 @@ class TestFavoriteView(TestCase):
         self.assertTrue(response.context["is_detail"])
 
     def test_same_user(self):
-        self.client.login(email=self.author.email, password=self.password)
+        self.client.force_login(self.author)
         response = self.client.post(self.url)
 
         self.assertEqual(response.status_code, http.HTTPStatus.NOT_FOUND)
@@ -204,7 +204,7 @@ class TestFavoriteView(TestCase):
         self.assertFalse(self.article.favorites.filter(pk=self.other_user.id).exists())
 
     def test_not_detail(self):
-        self.client.login(email=self.other_user.email, password=self.password)
+        self.client.force_login(self.other_user)
         response = self.client.post(
             self.url, HTTP_HX_TARGET=f"favorite-{self.article.id}"
         )
@@ -217,7 +217,7 @@ class TestFavoriteView(TestCase):
         self.assertFalse(response.context["is_detail"])
 
     def test_remove_favorite(self):
-        self.client.login(email=self.other_user.email, password=self.password)
+        self.client.force_login(self.other_user)
 
         self.article.favorites.add(self.other_user)
 
