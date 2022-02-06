@@ -115,3 +115,21 @@ class TestRegisterView(TestCase):
         )
         self.assertEqual(response.headers["HX-Redirect"], reverse("home"))
         self.assertTrue(User.objects.filter(email="tester@gmail.com").exists())
+
+
+class TestCheckEmailView(TestCase):
+    url = reverse_lazy("check_email")
+
+    def test_not_exists(self):
+        response = self.client.get(self.url, {"email": "tester@gmail.com"})
+        self.assertEqual(response.status_code, http.HTTPStatus.OK)
+        self.assertNotContains(response, "Email is in use")
+
+    def test_exists(self):
+        User.objects.create_user(
+            "tester@gmail.com", name="Test User", password="testpass1"
+        )
+
+        response = self.client.get(self.url, {"email": "tester@gmail.com"})
+        self.assertEqual(response.status_code, http.HTTPStatus.OK)
+        self.assertContains(response, "This email is in use")

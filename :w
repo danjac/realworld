@@ -105,13 +105,13 @@ def follow(request: HttpRequest, user_id: int) -> HttpResponse:
 
 
 @require_http_methods(["GET"])
-def check_email(request: HttpRequest) -> HttpResponse:
-    if (email := request.GET.get("email")) and User.objects.filter(
-        email__iexact=email
+def username_exists(request: HttpRequest) -> HttpResponse:
+    if (username := request.GET.get("username")) and User.objects.filter(
+        username__iexact=username
     ).exists():
         return HttpResponse(
             format_html(
-                """<ul class="error-messages"><li>This email is in use.</li></ul>"""
+                """<ul class="error-messages"><li>This username is in use.</li></ul>"""
             )
         )
     return HttpResponse()

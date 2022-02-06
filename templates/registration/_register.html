@@ -14,7 +14,9 @@
             {% render_field form.name placeholder="Your Name" class+=WIDGET_CLASS %}
         </fieldset>
         <fieldset class="form-group">
-            {% render_field form.email placeholder="Email" class+=WIDGET_CLASS %}
+            {% url 'check_email' as check_email_url %}
+            {% render_field form.email placeholder="Email" class+=WIDGET_CLASS hx-get=check_email_url hx-trigger="keyup" hx-swap="innerHTML" hx-target="#email-exists" %}
+            <div id="email-exists"></div>
         </fieldset>
         <fieldset class="form-group">
             {% render_field form.password placeholder="Password" class+=WIDGET_CLASS %}
