@@ -20,7 +20,6 @@ def home(request: HttpRequest) -> HttpResponse:
 
     articles = (
         Article.objects.select_related("author")
-        .with_favorites(request.user)
         .prefetch_related("tags")
         .order_by("-created")
     )
@@ -48,7 +47,7 @@ def home(request: HttpRequest) -> HttpResponse:
 def article_detail(request: HttpRequest, article_id: int, slug: str) -> HttpResponse:
 
     article = get_object_or_404(
-        Article.objects.select_related("author").with_favorites(request.user),
+        Article.objects.select_related("author"),
         pk=article_id,
     )
 
@@ -61,8 +60,8 @@ def article_detail(request: HttpRequest, article_id: int, slug: str) -> HttpResp
     context = {
         "article": article,
         "comments": comments,
-        "is_favorite": article.is_favorite,
-        "num_favorites": article.num_favorites,
+        "is_favorite": False,
+        "num_favorites": 0,
     }
 
     if request.user.is_authenticated:
@@ -164,8 +163,8 @@ def favorite(request: HttpRequest, article_id: int) -> HttpResponse:
         "articles/_favorite_action.html",
         {
             "article": article,
-            "is_favorite": is_favorite,
-            "num_favorites": article.favorites.count(),
+            "is_favorite": False,
+            "num_favorites": 0,
             "is_action": True,
             "is_detail": False
             if request.htmx.target == f"favorite-{article.id}"

@@ -18,14 +18,8 @@ User = get_user_model()
 class ArticleQuerySet(models.QuerySet):
     def with_favorites(self, user: AnonymousUser | User) -> models.QuerySet:
         return self.annotate(
-            num_favorites=models.Count("favorites"),
-            is_favorite=models.Exists(
-                get_user_model().objects.filter(
-                    pk=user.id, favorites=models.OuterRef("pk")
-                ),
-            )
-            if user.is_authenticated
-            else models.Value(False, output_field=models.BooleanField()),
+            num_favorites=models.Value(0, output_field=models.IntegerField()),
+            is_favorite=models.Value(False, output_field=models.BooleanField()),
         )
 
 
@@ -44,10 +38,6 @@ class Article(models.Model):
     updated: datetime = models.DateTimeField(auto_now=True)
 
     tags: list[Tag] = TaggableManager(blank=True)
-
-    favorites: list[User] = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, blank=True, related_name="favorites"
-    )
 
     objects = ArticleManager()
 
