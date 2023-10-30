@@ -3,13 +3,13 @@ from __future__ import annotations
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.urls import reverse
+from djongo import models as djongo_models
 
 
 class UserManager(BaseUserManager):
     def create_user(
         self, email: str, password: str | None = None, **other_fields
     ) -> User:
-
         user = User(email=email, **other_fields)
 
         if password:
